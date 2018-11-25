@@ -1,7 +1,7 @@
 import numpy as np
 import cv2 as cv
 
-cap = cv.VideoCapture('videos/people.mp4')
+cap = cv.VideoCapture('videos/square.mp4')
 _,frame = cap.read()
 frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
@@ -11,6 +11,7 @@ B_norm = np.zeros((frame.shape[0], frame.shape[1]))
 kernel = cv.getStructuringElement(cv.MORPH_RECT, (3, 3))
 kernel2 = cv.getStructuringElement(cv.MORPH_RECT, (3, 3))
 
+i = 0
 while(1):
     frame2 = frame
     _,frame = cap.read()
@@ -50,7 +51,10 @@ while(1):
     #closing = cv.morphologyEx(opening, cv.MORPH_CLOSE, kernel)
 
     cv.imshow('bin', opening)
-    cv.waitKey(0)
+    if i == 100:
+        cv.imwrite('images/bgtest.jpg', opening)
+    cv.waitKey(1)
+    i += 1
 
     if cv.waitKey(1) & 0xFF == ord('q'):
             break

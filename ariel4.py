@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 
-cap = cv.VideoCapture('/home/pugdel/Vídeos/rain.mp4')
+cap = cv.VideoCapture('video/rain.mp4')
 
 _, frame1 = cap.read()
 B, G, R = cv.split(frame1)
