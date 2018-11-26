@@ -2,7 +2,7 @@ import numpy as np
 import cv2 as cv
 import boundinrect as bdr
 
-cap = cv.VideoCapture('videos/square.mp4')
+cap = cv.VideoCapture('videos/rain.mp4')
 _,frame = cap.read()
 frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
@@ -16,6 +16,38 @@ while(1):
     frame2 = frame
     _,frame_rgb = cap.read()
     frame = cv.cvtColor(frame_rgb, cv.COLOR_BGR2GRAY)
+    merge = np.zeros((frame.shape[0], frame.shape[1], 3))
+
+    frame_hsi = cv.cvtColor(frame_rgb, cv.COLOR_BGR2HSV)
+    frame_hsi[:,:,2] = (1/3)*(frame_rgb[:,:,0] + frame_rgb[:,:,1] + frame_rgb[:,:,2]) 
+    frame_mean = frame.mean()
+
+    H_top = (frame_mean-0.15)/10 + 0.012
+    H_bottom = (frame_mean-0.15)/10 - 0.012
+    S_top = (frame_mean+0.1)/10 + 0.07
+    S_bottom = (frame_mean+0.1)/10 - 0.07
+    I_top = (1.12*frame_mean) + 0.06
+    I_bottom = (1.12*frame_mean) - 0.06
+
+    boolH_top = frame_hsi[:,:,0] <= H_top
+    boolH_bottom = frame_hsi[:,:,0] >= H_bottom
+    boolH = boolH_bottom & boolH_top
+
+    boolS_top = frame_hsi[:,:,1] <= S_top 
+    boolS_bottom = frame_hsi[:,:,1] >= S_bottom
+    boolS = boolS_bottom & boolS_top        
+
+    boolI_top = frame_hsi[:,:,2] <= I_top    
+    boolI_bottom = frame_hsi[:,:,2] >= I_bottom
+    boolI =  boolI_bottom & boolI_top
+
+    boolMask = boolH & boolS & boolI
+    merge[:,:,0] = boolMask
+    merge[:,:,1] = boolMask
+    merge[:,:,2] = boolMask
+
+    AAI = merge*frame_hsi
+    cv.imshow('aai', AAI)
 
     Di = cv.absdiff(frame, frame2)
     _,Di_T = cv.threshold(Di, 20, 255, cv.THRESH_BINARY)
@@ -54,7 +86,7 @@ while(1):
 
     #cv.imshow('bin', closing)
     closing = np.uint8(closing)
-    _, contours,_ = cv.findContours(closing, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    '''_, contours,_ = cv.findContours(closing, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
     for contour in contours:
         rect = cv.minAreaRect(contour)
@@ -62,7 +94,7 @@ while(1):
         box = np.int0(box)
         frame_rgb = cv.drawContours(frame_rgb, [box], 0, (0,0,255), 3)
 
-    cv.imshow('agrvai', frame_rgb)
+    cv.imshow('agrvai', frame_rgb)'''
 
     #drawing = bdr.boundaries(opening)
     #cv.imshow('bounding', drawing)
