@@ -47,41 +47,36 @@ def thresh_callback(val):
 
     ## [showDrawings]
     # Show in a window
-    #cv.imshow('Contours', drawing)
-    #cv.imwrite('bsbsb.png', drawing)
-    return drawing
+    cv.imshow('Contours', drawing)
     ## [showDrawings]
+
 ## [setup]
 # Load source image
 '''parser = argparse.ArgumentParser(description='Code for Creating Bounding boxes and circles for contours tutorial.')
-parser.add_argument('--input', help='Path to input image.', default='images/icc.jpg')
-args = parser.parse_args()
+parser.add_argument('--input', help='Path to input image.', default='stuff.jpg')
+args = parser.parse_args()'''
 
-src = cv.imread(cv.samples.findFile(args.input))'''
+src = cv.imread('Screenshot.png')
+if src is None:
+    print('Could not open or find the image:', args.input)
+    exit(0)
 
-def boundaries(image):
-    #src = img
-    '''if src is None:
-        print('Could not open or find the image:', args.input)
-        exit(0)'''
-    # Convert image to gray and blur it
-    #src_gray = cv.cvtColor(new_img, cv.COLOR_RGB2GRAY)
-    src_gray = cv.blur(image, (3,3))
-    ## [setup]
+# Convert image to gray and blur it
+src_gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
+src_gray = cv.blur(src_gray, (3,3))
+## [setup]
 
-    ## [createWindow]
-    # Create Window
-    source_window = 'Source'
-    cv.namedWindow(source_window)
-    #cv.imshow(source_window, src)
-    #cv.imwrite('baba.png', src)
-    ## [createWindow]
-    ## [trackbar]
-    max_thresh = 255
-    thresh = 100 # initial threshold
-    cv.createTrackbar('Canny thresh:', source_window, thresh, max_thresh, thresh_callback)
-    rects = thresh_callback(thresh, src_gray)
-    ## [trackbar]
+## [createWindow]
+# Create Window
+source_window = 'Source'
+cv.namedWindow(source_window)
+cv.imshow(source_window, src)
+## [createWindow]
+## [trackbar]
+max_thresh = 255
+thresh = 100 # initial threshold
+cv.createTrackbar('Canny thresh:', source_window, thresh, max_thresh, thresh_callback)
+thresh_callback(thresh)
+## [trackbar]
 
-    #cv.waitKey()
-    return rects
+cv.waitKey()

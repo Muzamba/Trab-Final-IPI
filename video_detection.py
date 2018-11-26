@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture('videos/square.mp4')
+cap = cv2.VideoCapture('videos/rain.mp4')
 fgbg = cv2.createBackgroundSubtractorKNN(detectShadows = False)
 kernel_o = np.ones((10,10), np.uint8)
 kernel_c = np.ones((7,7), np.uint8)
